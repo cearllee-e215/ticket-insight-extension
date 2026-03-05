@@ -1,0 +1,36 @@
+{
+    "manifest_version": 3,
+    "name": "Ticket Insight",
+    "version": "1.0.0",
+    "description": "Displays ticket price points and inventory data on Ticketmaster event pages",
+    "permissions": [
+          "activeTab"
+    ],
+    "content_scripts": [
+          {
+                  "matches": [
+                            "*://*.ticketmaster.com/*",
+                            "*://*.ticketmaster.ca/*",
+                            "*://*.livenation.com/*",
+                            "*://concerts.livenation.com/*"
+                  ],
+                  "js": [
+                            "content.js"
+                  ],
+                  "run_at": "document_start"
+          }
+    ],
+    "web_accessible_resources": [
+          {
+                  "resources": [
+                            "inject/xhr.js"
+                  ],
+                  "matches": [
+                            "*://*.ticketmaster.com/*",
+                            "*://*.ticketmaster.ca/*",
+                            "*://*.livenation.com/*",
+                            "*://concerts.livenation.com/*"
+                  ]
+          }
+    ]
+}
