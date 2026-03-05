@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Ticket Insight",
-  "version": "1.1.0",
+    "version": "2.0.0",
   "description": "Displays ticket price points, inventory data, seat map shading, and secondary market comparison on Ticketmaster event pages",
   "permissions": [
     "activeTab"
