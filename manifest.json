@@ -1,36 +1,40 @@
 {
-    "manifest_version": 3,
-    "name": "Ticket Insight",
-    "version": "1.0.0",
-    "description": "Displays ticket price points and inventory data on Ticketmaster event pages",
-    "permissions": [
-          "activeTab"
-    ],
-    "content_scripts": [
-          {
-                  "matches": [
-                            "*://*.ticketmaster.com/*",
-                            "*://*.ticketmaster.ca/*",
-                            "*://*.livenation.com/*",
-                            "*://concerts.livenation.com/*"
-                  ],
-                  "js": [
-                            "content.js"
-                  ],
-                  "run_at": "document_start"
-          }
-    ],
-    "web_accessible_resources": [
-          {
-                  "resources": [
-                            "inject/xhr.js"
-                  ],
-                  "matches": [
-                            "*://*.ticketmaster.com/*",
-                            "*://*.ticketmaster.ca/*",
-                            "*://*.livenation.com/*",
-                            "*://concerts.livenation.com/*"
-                  ]
-          }
-    ]
+  "manifest_version": 3,
+  "name": "Ticket Insight",
+  "version": "1.1.0",
+  "description": "Displays ticket price points, inventory data, seat map shading, and secondary market comparison on Ticketmaster event pages",
+  "permissions": [
+    "activeTab"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Ticket Insight"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.ticketmaster.com/*",
+        "*://*.ticketmaster.ca/*",
+        "*://*.livenation.com/*",
+        "*://concerts.livenation.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "inject/xhr.js"
+      ],
+      "matches": [
+        "*://*.ticketmaster.com/*",
+        "*://*.ticketmaster.ca/*",
+        "*://*.livenation.com/*",
+        "*://concerts.livenation.com/*"
+      ]
+    }
+  ]
 }
