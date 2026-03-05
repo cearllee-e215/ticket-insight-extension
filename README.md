@@ -1,57 +1,60 @@
 # Ticket Insight - Chrome Extension
 
-Chrome extension that displays ticket price points and inventory data on Ticketmaster event pages.
+Chrome extension that displays ticket price points, inventory data, seat map shading, and secondary market comparison on Ticketmaster event pages.
+
+## Features
+
+### Price Points Overlay
+- Color-coded price point swatches (green = cheapest, red = most expensive)
+- Ticket counts per $10 price bucket
+- Total ticket inventory breakdown (primary vs resale)
+- Click any price dot to highlight matching seats on the venue map
+
+### Seat Map Shading
+- Automatically colors seats on the Ticketmaster venue map by price range
+- Click a specific price point to highlight only seats in that price range (others dim out)
+- Blue ring indicates the currently selected price tier
+- "Shade All Seats" and "Clear Shading" controls in the Customize menu
+
+### Section Inventory (Popup)
+- Click the extension icon to see per-section ticket counts
+- Filter between All, Primary, and Resale tickets
+- Each section shows total count with primary/resale breakdown
+- Lowest price per section displayed
+
+### Secondary Market Comparison
+- Click the magnifying glass icon in the overlay header
+- Quick links to search for the same event on StubHub, Vivid Seats, SeatGeek, Gametime, and TickPick
+- Opens in new tabs for easy price comparison
 
 ## Installation
 
 1. Clone or download this repo
-2. Open Chrome and go to `chrome://extensions/`
+2. Open Chrome and go to \`chrome://extensions/\`
 3. Enable **Developer mode** (top-right toggle)
 4. Click **Load unpacked** and select this folder
-5. Navigate to any Ticketmaster event page — the overlay appears automatically
+5. Navigate to any Ticketmaster event page - the overlay appears automatically
 
 > **Note:** If you have the Ticket Flipping Toolbox extension installed, disable it first to avoid XHR interception conflicts.
 
-## What It Does
-
-Displays a **Price Points** overlay on Ticketmaster event pages showing:
-
-- All available ticket price points with ticket counts per \$10 bucket
-- Color-coded swatches (green = cheapest, red = most expensive)
-- Total ticket inventory breakdown (primary vs resale)
-- Per-section ticket counts with best (lowest) price per section (expandable)
-
 ## How It Works
 
-### 1. XHR Interception (`inject/xhr.js`)
+1. **XHR Interception** (\`inject/xhr.js\`): Intercepts Ticketmaster's ISMDS API responses containing event facets data
+2. **Data Processing** (\`content.js\`): Parses facets into price buckets, section-level inventory, and primary/resale breakdowns
+3. **Overlay Rendering** (\`content.js\`): Builds the Price Points overlay with clickable swatches, filters, and section details
+4. **Seat Map Shading** (\`content.js\`): Colors SVG seat map elements to match price tiers
+5. **Secondary Market** (\`content.js\`): Generates search links for secondary ticket marketplaces
+6. **Popup UI** (\`popup.html\` + \`popup.js\`): Extension icon popup showing section-level inventory with filtering
 
-Monkey-patches `XMLHttpRequest.prototype.open` and `.send` to intercept responses from Ticketmaster's **ISMDS** (Inventory & Seat Management Data Service) API. Specifically targets the `/api/ismds/event/{eventId}/facets/` endpoint, which returns the full inventory for an event.
+## File Structure
 
-### 2. Data Processing (`content.js`)
-
-Receives the intercepted EventFacets response via `window.postMessage`, parses it, and:
-
-- Groups tickets into \$10 price buckets using `Math.ceil(listPrice / 10) * 10`
-- Extracts per-section data from resale offer details (section, row, seat, price)
-- Calculates primary vs resale inventory counts
-
-### 3. Overlay UI (`content.js`)
-
-Renders a fixed-position panel with color-coded price point swatches and an expandable section-level detail view.
-
-## Key Data Source
-
-The extension reads the **ISMDS EventFacets API** response which contains:
-
-- `facets[]`: Array of ticket groups with `count`, `listPriceRange`, `inventoryTypes`, and `offers[]`
-- `_embedded.offer[]`: Detailed offer data including:
-  - **Primary offers**: `listPrice`, `totalPrice`, `charges`, `priceLevelId`
-  - **Resale offers**: All of the above plus `section`, `row`, `seatFrom`, `seatTo`, `faceValue`
-
-## Files
-
-| File | Purpose |
-|------|---------|
-| `manifest.json` | Extension manifest (Manifest V3) |
-| `content.js` | Content script: injects interceptor, processes data, renders UI |
-| `inject/xhr.js` | Page-context script: patches XHR to capture API responses |
+\`\`\`
+ticket-insight-extension/
+  inject/
+    xhr.js          # XHR interceptor for ISMDS API
+  content.js        # Main content script (overlay, shading, secondary market)
+  manifest.json     # Extension manifest (v3)
+  popup.html        # Extension popup UI
+  popup.js          # Popup logic (section inventory, filters)
+  README.md         # This file
+\`\`\`
